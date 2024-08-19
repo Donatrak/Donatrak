@@ -20,7 +20,7 @@ export default function Button({
       className={`relative inline-flex items-center justify-center 
                   px-6 py-3 border border-transparent 
                   text-sm font-bold uppercase tracking-wide 
-                  rounded-lg shadow-lg transition duration-300 ease-in-out 
+                  rounded-xl shadow-lg transition duration-300 ease-in-out 
                   transform hover:-translate-y-1 hover:shadow-xl 
                   ${variants[variant]}`}
       onClick={onClick}
