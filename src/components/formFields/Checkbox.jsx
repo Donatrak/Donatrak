@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
 export default function Checkbox({
+  id,
+  name,
   label,
   checked,
   onChange,
@@ -12,11 +14,11 @@ export default function Checkbox({
         checked={checked}
         onChange={onChange}
         className="form-checkbox h-5 w-5 text-primary 
-                   rounded border-neutral focus:ring-primary"
+                   rounded border shadow-inset focus:ring-primary"
         required={required}
       />
       {label && (
-        <label className="ml-2 text-sm font-medium text-neutral-dark">
+        <label className="ml-2 text-sm flex items-center font-medium text-gray-500">
           {label}
           {required && <span className="text-red-600">*</span>}
         </label>

@@ -1,9 +1,14 @@
 import Button from "../../components/buttons/Button";
+import AboutSection from "./sections/About";
+import FeaturedCampaigns from "./sections/FeaturedCampaigns";
+import Hero from "./sections/Hero";
 
 const Home = () => {
   return (
     <div>
-      <Button>Hello</Button>
+      <Hero />
+      <AboutSection />
+      <FeaturedCampaigns />
     </div>
   );
 };

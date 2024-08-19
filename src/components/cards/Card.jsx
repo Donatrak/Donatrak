@@ -15,7 +15,7 @@ export default function Card({ title, children, footer, image = null }) {
         {title && (
           <h3 className="text-xl font-semibold text-primary mb-4">{title}</h3>
         )}
-        <div className="text-base text-neutral-dark">{children}</div>
+        <div className="text-base text-gray-600">{children}</div>
       </div>
       {footer && (
         <div className="p-4 bg-neutral-light border-t border-neutral">

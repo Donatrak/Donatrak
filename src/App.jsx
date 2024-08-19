@@ -30,8 +30,28 @@ import MyCampaignDetails from "./pages/user/dashboard/campaigns/MyCampaignDetail
 import MyDonations from "./pages/user/dashboard/donations/MyDonations";
 import AddMyDonation from "./pages/user/dashboard/donations/AddMyDonation";
 import NotFound from "./pages/not-found/NotFound";
-
+import UserRoute from "./components/Routes/UserRoute";
+import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { dummyUser } from "./data-placeholder";
 function App() {
+  const [user, setUser] = useState({});
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("donatrakUser");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      console.log("User---->", parsedUser);
+      dispatch({
+        type: "LOGGED_IN_USER",
+        payload: parsedUser,
+      });
+    } else {
+      setUser(dummyUser);
+    }
+  }, [dispatch]);
   const router = createBrowserRouter([
     {
       path: "/",
@@ -71,22 +91,35 @@ function App() {
     },
 
     {
-      path: "/user",
-      element: <UserLayout />,
+      path: "/user/dashboard",
+      element: (
+        <UserRoute>
+          <UserLayout />
+        </UserRoute>
+      ),
       children: [
         { index: true, element: <UserDashboardOverview /> },
-        { path: "/user/profile", element: <UserProfile /> },
-        { path: "/user/profile/edit", element: <EditUserProfile /> },
+        { path: "/user/dashboard/profile", element: <UserProfile /> },
+        { path: "/user/dashboard/profile/edit", element: <EditUserProfile /> },
 
         // -----------Campaigns ----------------
-        { path: "/user/campaigns", element: <MyCampaigns /> },
-        { path: "/user/campaign/:id", element: <MyCampaignDetails /> },
-        { path: "/user/campaigns/create", element: <CreateMyCampaign /> },
-        { path: "/user/campaigns/:id/edit", element: <EditMyCampaign /> },
+        { path: "/user/dashboard/campaigns", element: <MyCampaigns /> },
+        {
+          path: "/user/dashboard/campaign/:id",
+          element: <MyCampaignDetails />,
+        },
+        {
+          path: "/user/dashboard/campaigns/create",
+          element: <CreateMyCampaign />,
+        },
+        {
+          path: "/user/dashboard/campaigns/:id/edit",
+          element: <EditMyCampaign />,
+        },
 
         // --------------Donations ------------------
-        { path: "/user/donations", element: <MyDonations /> },
-        { path: "/user/donations/add", element: <AddMyDonation /> },
+        { path: "/user/dashboard/donations", element: <MyDonations /> },
+        { path: "/user/dashboard/donations/add", element: <AddMyDonation /> },
       ],
     },
   ]);

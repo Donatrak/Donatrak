@@ -5,7 +5,6 @@ const PublicLayout = () => {
   return (
     <div>
       <PublicNav />
-      PublicLayout
       <Outlet />
     </div>
   );

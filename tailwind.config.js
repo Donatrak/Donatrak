@@ -18,7 +18,7 @@ export default {
         neutral: {
           light: "#F7FAFC", // Light backgrounds
           DEFAULT: "#EDF2F7", // Base background color
-          dark: "#E2E8F0", // Darker neutral for borders, etc.
+          dark: "#975563", // Darker neutral for borders, etc.
         },
         accent: {
           red: "#E53E3E", // Accent red for error messages, critical buttons
