@@ -18,3 +18,14 @@ export const stepperReducer = (state = 0, action) => {
       return state;
   }
 };
+
+export const intendedPageReducer = (state = "", action) => {
+  switch (action.type) {
+    case "SET_INTENDED_PAGE":
+      return action.payload;
+    case "CLEAR_INTENDED_PAGE":
+      return "";
+    default:
+      return state;
+  }
+};

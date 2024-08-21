@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const links = [
@@ -11,16 +11,25 @@ const links = [
 const PublicNav = () => {
   // State to track whether the mobile menu is open or closed
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const [navbarHeight, setNavbarHeight] = useState(0);
+  const navbarRef = useRef(null);
   // Function to toggle the mobile menu
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  useEffect(() => {
+    if (navbarRef.current) {
+      setNavbarHeight(navbarRef.current.offsetHeight);
+    }
+  }, []);
+
   return (
     <>
-      <div></div>
-      <nav className="fixed z-50 w-full top-0 bg-primary shadow-lg">
+      <nav
+        ref={navbarRef}
+        className="fixed z-50 w-full top-0 bg-primary shadow-lg"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
@@ -125,6 +134,7 @@ const PublicNav = () => {
           </div>
         )}
       </nav>{" "}
+      <div style={{ height: navbarHeight }} className="bg-black"></div>
     </>
   );
 };

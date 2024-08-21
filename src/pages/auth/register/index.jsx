@@ -1,11 +1,14 @@
 import { useState } from "react";
 import Input from "../../../components/formFields/Input";
 import Checkbox from "../../../components/formFields/Checkbox";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SubmitButton from "../../../components/formFields/SubmitButton";
 import { apiRegister } from "../../../services/auth";
 
 const Register = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const redirectTo = queryParams.get("redirect") || "/user/dashboard";
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -67,7 +70,7 @@ const Register = () => {
             confirmPassword: "",
             agreedToTerms: false,
           });
-          navigate("/login");
+          navigate(redirectTo);
         }
       } catch (error) {
         console.log("Error registering user-->", error);

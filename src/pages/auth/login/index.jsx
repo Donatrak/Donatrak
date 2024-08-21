@@ -1,17 +1,18 @@
 import { useState } from "react";
 import Input from "../../../components/formFields/Input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SubmitButton from "../../../components/formFields/SubmitButton";
 import { apiLogin } from "../../../services/auth";
 
 const Login = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -31,6 +32,9 @@ const Login = () => {
     return validationErrors;
   };
 
+  const queryParams = new URLSearchParams(location.search);
+  const redirectTo = queryParams.get("redirect") || "/user/dashboard";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
@@ -44,12 +48,12 @@ const Login = () => {
           password: formData.password,
         });
         if (res.status === 200) {
-          console.log("Login response-->", res.data.accessToken);
+          console.log("Login response-->", res.data);
           window.localStorage.setItem(
             "donatrakAccessToken",
             res.data.accessToken
           );
-          navigate("/user/dashboard");
+          navigate(redirectTo);
         }
       } catch (error) {
         console.log("Error logging in-->", error);
@@ -119,7 +123,14 @@ const Login = () => {
         {/* Link to Register */}
         <p className="mt-6 text-sm text-center text-gray-500">
           Don&apos;t have an account?{" "}
-          <Link to="/register" className="text-primary hover:underline">
+          <Link
+            to={`${
+              redirectTo && redirectTo !== "/user/dashboard"
+                ? `/register?redirect=${redirectTo}`
+                : "/register"
+            }`}
+            className="text-primary hover:underline"
+          >
             Sign up
           </Link>
         </p>

@@ -34,6 +34,9 @@ import UserRoute from "./components/Routes/UserRoute";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { dummyUser } from "./data-placeholder";
+import Campaign from "./pages/campaign/Campaign";
+import DonateLayout from "./layouts/DonateLayout";
+import Donate from "./pages/donate";
 function App() {
   const [user, setUser] = useState({});
   const dispatch = useDispatch();
@@ -60,11 +63,25 @@ function App() {
         { index: true, element: <Home /> },
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
+        { path: "/campaigns", element: <Campaigns /> },
+        { path: "/campaign/:id", element: <Campaign /> },
         { path: "/contact", element: <Contact /> },
         { path: "/about", element: <About /> },
         { path: "*", element: <NotFound /> },
       ],
     },
+
+    //--------------Donation Process--------------
+    {
+      path: "/donate/:id",
+      element: (
+        <UserRoute>
+          <DonateLayout user={user} />
+        </UserRoute>
+      ),
+      children: [{ index: true, element: <Donate /> }],
+    },
+
     {
       path: "/admin",
       element: <AdminLayout />,
@@ -94,7 +111,7 @@ function App() {
       path: "/user/dashboard",
       element: (
         <UserRoute>
-          <UserLayout />
+          <UserLayout user={user} />
         </UserRoute>
       ),
       children: [
