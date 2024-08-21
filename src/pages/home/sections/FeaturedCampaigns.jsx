@@ -8,27 +8,6 @@ import { formatDate } from "../../../lib/lib";
 import Button from "../../../components/buttons/Button";
 import { useSelector } from "react-redux";
 
-const campaigns = [
-  {
-    title: "Helping Hands Community Fund",
-    image: HeroImage,
-    description:
-      "Aid local families in need by contributing to this community-driven fund.",
-  },
-  {
-    title: "Green Earth Initiative",
-    image: HeroImage,
-    description:
-      "Support climate action projects and make a difference for the planet.",
-  },
-  {
-    title: "Education for All",
-    image: HeroImage,
-    description:
-      "Provide educational resources and scholarships to underprivileged children.",
-  },
-];
-
 const FeaturedCampaigns = () => {
   const { user } = useSelector((state) => ({ ...state }));
 
