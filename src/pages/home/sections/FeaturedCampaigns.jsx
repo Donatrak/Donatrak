@@ -86,7 +86,11 @@ const FeaturedCampaigns = () => {
                     <Card
                       key={index}
                       title={campaign.title}
-                      image={campaign.image || HeroImage}
+                      image={
+                        campaign.image
+                          ? `https://savefiles.org/${campaign.image}?shareable_link=346`
+                          : HeroImage
+                      }
                       footer={
                         <div className="flex justify-center gap-6 items-center">
                           <Button
