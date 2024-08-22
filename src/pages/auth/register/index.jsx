@@ -3,12 +3,13 @@ import Input from "../../../components/formFields/Input";
 import Checkbox from "../../../components/formFields/Checkbox";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import SubmitButton from "../../../components/formFields/SubmitButton";
-import { apiRegister } from "../../../services/auth";
+import { apiLogin, apiRegister } from "../../../services/auth";
+import { useDispatch } from "react-redux";
 
 const Register = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const redirectTo = queryParams.get("redirect") || "/user/dashboard";
+  const redirectTo = queryParams.get("redirect") || "/";
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -20,6 +21,7 @@ const Register = () => {
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -59,18 +61,39 @@ const Register = () => {
           lastName: formData.lastName,
           email: formData.email,
           password: formData.password,
+          role: "user",
+          termsAndConditions: true,
         });
         if (res.status === 200 || res.status === 201) {
           console.log("Register response-->", res);
-          setFormData({
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            agreedToTerms: false,
+          const loginRes = await apiLogin({
+            email: formData.email,
+            password: formData.password,
           });
-          navigate(redirectTo);
+          if (loginRes.status === 200) {
+            console.log("Login response-->", loginRes.data);
+            window.localStorage.setItem(
+              "donatrakAccessToken",
+              loginRes.data.accessToken
+            );
+            window.localStorage.setItem(
+              "donatrakUser",
+              JSON.stringify(loginRes.data.userDetails)
+            );
+            dispatch({
+              type: "LOGGED_IN_USER",
+              payload: loginRes.data.userDetails,
+            });
+            setFormData({
+              firstName: "",
+              lastName: "",
+              email: "",
+              password: "",
+              confirmPassword: "",
+              agreedToTerms: false,
+            });
+            navigate(redirectTo);
+          }
         }
       } catch (error) {
         console.log("Error registering user-->", error);
@@ -207,7 +230,7 @@ const Register = () => {
 
           {/* Submit Button */}
           <div>
-            <SubmitButton label="Sign Up" />
+            <SubmitButton label={loading ? "Signing up..." : "Sign Up"} />
           </div>
         </form>
 

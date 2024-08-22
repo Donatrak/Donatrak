@@ -25,14 +25,15 @@ const Donate = () => {
     setLoading(true);
     try {
       const res = await apiCampaign(id); // Ensure to await the API call
-      if (res.data.id) {
-        console.log("ress---->", res);
-        setCampaign(res.data);
+      console.log("ress---->", res);
+      if (res.status === 200 || res.status === 201) {
+        setCampaign(res.data.data);
       } else {
         setCampaign(campaignData);
       }
     } catch (error) {
       console.log("Error fetching campaign --->", error);
+      setCampaign(campaignData);
     } finally {
       setLoading(false);
     }
@@ -63,7 +64,7 @@ const Donate = () => {
           <div className="bg-white shadow-lg rounded-lg p-6">
             {/* Campaign Details */}
             <div className="mb-6">
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-primary-dark">
                 {campaign.title}
               </h1>
               <p className="text-gray-700 mt-2">{campaign.description}</p>

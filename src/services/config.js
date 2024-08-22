@@ -11,8 +11,8 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     // Get the token from localStorage
-    const token = window.localStorage.getItem("donatrakUser")
-      ? JSON.parse(window.localStorage.getItem("donatrakUser")).token
+    const token = window.localStorage.getItem("donatrakAccessToken")
+      ? window.localStorage.getItem("donatrakAccessToken")
       : null;
 
     // If a token exists, add it to the headers

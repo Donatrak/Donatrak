@@ -3,6 +3,7 @@ import Input from "../../../components/formFields/Input";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import SubmitButton from "../../../components/formFields/SubmitButton";
 import { apiLogin } from "../../../services/auth";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const location = useLocation();
@@ -12,6 +13,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -33,7 +35,7 @@ const Login = () => {
   };
 
   const queryParams = new URLSearchParams(location.search);
-  const redirectTo = queryParams.get("redirect") || "/user/dashboard";
+  const redirectTo = queryParams.get("redirect") || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,6 +55,14 @@ const Login = () => {
             "donatrakAccessToken",
             res.data.accessToken
           );
+          window.localStorage.setItem(
+            "donatrakUser",
+            JSON.stringify(res.data.userDetails)
+          );
+          dispatch({
+            type: "LOGGED_IN_USER",
+            payload: res.data.userDetails,
+          });
           navigate(redirectTo);
         }
       } catch (error) {

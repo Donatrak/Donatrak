@@ -4,7 +4,7 @@ export const apiRegister = async (payload) => {
   return await apiClient.post(`/users/auth/register`, payload);
 };
 export const apiLogin = async (payload) => {
-  return apiClient.post("/users/auth/token/login", payload);
+  return apiClient.post("/users/auth/login", payload);
 };
 export const generateToken = async (payload) => {
   return apiClient.post("/users/auth/token", payload);

@@ -5,6 +5,7 @@ import { CampaignSkeleton } from "../../components/feedbacks/CampaignSkeleton";
 import { formatDate } from "../../lib/lib";
 import { campaignData } from "../../data-placeholder";
 import { useSelector } from "react-redux";
+import HeroImage from "../../assets/images/Hero.jpg";
 
 const Campaign = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -21,14 +22,15 @@ const Campaign = () => {
     setLoading(true);
     try {
       const res = await apiCampaign(id); // Ensure to await the API call
-      if (res.data.id) {
-        console.log("ress---->", res);
-        setCampaign(res.data);
+      console.log("ress---->", res);
+      if (res.status === 200 || res.status === 201) {
+        setCampaign(res.data.data);
       } else {
         setCampaign(campaignData);
       }
     } catch (error) {
       console.log("Error fetching campaign --->", error);
+      setCampaign(campaignData);
     } finally {
       setLoading(false);
     }
@@ -56,7 +58,11 @@ const Campaign = () => {
           {campaign ? (
             <div className="bg-white shadow-lg rounded-lg overflow-hidden">
               <img
-                src={campaign.image || "default-image.jpg"}
+                src={
+                  campaign.image
+                    ? `https://savefiles.org/${campaign.image}?shareable_link=346`
+                    : HeroImage
+                }
                 alt={campaign.title}
                 className="w-full h-64 object-cover"
               />

@@ -37,6 +37,8 @@ import { dummyUser } from "./data-placeholder";
 import Campaign from "./pages/campaign/Campaign";
 import DonateLayout from "./layouts/DonateLayout";
 import Donate from "./pages/donate";
+import AllCampaigns from "./pages/campaigns/Campaigns";
+import GuestRoute from "./components/Routes/GuestRoute";
 function App() {
   const [user, setUser] = useState({});
   const dispatch = useDispatch();
@@ -61,9 +63,23 @@ function App() {
       element: <PublicLayout />,
       children: [
         { index: true, element: <Home /> },
-        { path: "/login", element: <Login /> },
-        { path: "/register", element: <Register /> },
-        { path: "/campaigns", element: <Campaigns /> },
+        {
+          path: "/login",
+          element: (
+            <GuestRoute>
+              <Login />
+            </GuestRoute>
+          ),
+        },
+        {
+          path: "/register",
+          element: (
+            <GuestRoute>
+              <Register />
+            </GuestRoute>
+          ),
+        },
+        { path: "/campaigns", element: <AllCampaigns /> },
         { path: "/campaign/:id", element: <Campaign /> },
         { path: "/contact", element: <Contact /> },
         { path: "/about", element: <About /> },

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { apiLogout } from "../../services/auth";
 
 const links = [
   { name: "Home", path: "/" },
@@ -9,10 +11,16 @@ const links = [
 ];
 
 const PublicNav = () => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => ({ ...state }));
+
   // State to track whether the mobile menu is open or closed
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [navbarHeight, setNavbarHeight] = useState(0);
   const navbarRef = useRef(null);
+
+  const navigate = useNavigate();
+
   // Function to toggle the mobile menu
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -23,6 +31,23 @@ const PublicNav = () => {
       setNavbarHeight(navbarRef.current.offsetHeight);
     }
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      // const res = await apiLogout();
+      // console.log("Logout response==>", res);
+      window.localStorage.removeItem("donatrakAccessToken");
+      window.localStorage.removeItem("donatrakUser");
+
+      dispatch({
+        type: "LOGOUT",
+        payload: null,
+      });
+      navigate("/login");
+    } catch (error) {
+      console.log("Error loging out-->", error);
+    }
+  };
 
   return (
     <>
@@ -42,32 +67,49 @@ const PublicNav = () => {
             </div>
             {/* Menu Links */}
             <div className="hidden md:flex justify-center items-center space-x-8 ml-10">
-              {links.map((link, index) => {
-                return (
-                  <Link
-                    key={index}
-                    to={link.path}
-                    className="text-gray-300 hover:text-white"
-                  >
-                    {link.name}
-                  </Link>
-                );
-              })}
+              {links.map((link, index) => (
+                <Link
+                  key={index}
+                  to={link.path}
+                  className="text-gray-300 hover:text-white"
+                >
+                  {link.name}
+                </Link>
+              ))}
             </div>
-            {/* Login and Register Links */}
+            {/* User Links */}
             <div className="hidden md:flex items-center space-x-4">
-              <Link
-                to="/register"
-                className="text-white bg-secondary-DEFAULT px-3 py-2 rounded-md text-sm font-medium hover:bg-secondary-dark"
-              >
-                Register
-              </Link>
-              <Link
-                to="/login"
-                className="text-white border border-white px-3 py-2 rounded-md text-sm font-medium hover:bg-secondary-light"
-              >
-                Login
-              </Link>
+              {user ? (
+                <>
+                  <Link
+                    to="/user/dashboard"
+                    className="text-white bg-secondary-DEFAULT px-3 py-2 rounded-md text-sm font-medium hover:bg-secondary-dark"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="text-white border border-white px-3 py-2 rounded-md text-sm font-medium hover:bg-secondary-light"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/register"
+                    className="text-white bg-secondary-DEFAULT px-3 py-2 rounded-md text-sm font-medium hover:bg-secondary-dark"
+                  >
+                    Register
+                  </Link>
+                  <Link
+                    to="/login"
+                    className="text-white border border-white px-3 py-2 rounded-md text-sm font-medium hover:bg-secondary-light"
+                  >
+                    Login
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -75,7 +117,7 @@ const PublicNav = () => {
               <button
                 type="button"
                 className="text-white hover:text-gray-300 focus:outline-none"
-                onClick={toggleMobileMenu} // Toggle the mobile menu on click
+                onClick={toggleMobileMenu}
               >
                 <svg
                   className="h-6 w-6"
@@ -97,7 +139,7 @@ const PublicNav = () => {
         </div>
 
         {/* Mobile Menu */}
-        {isMobileMenuOpen && ( // Only render the mobile menu if the state is true (open)
+        {isMobileMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               {links.map((link, index) => (
@@ -105,35 +147,58 @@ const PublicNav = () => {
                   key={index}
                   to={link.path}
                   className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-dark"
-                  onClick={toggleMobileMenu} // Optionally close menu on link click
+                  onClick={toggleMobileMenu}
                 >
                   {link.name}
                 </Link>
               ))}
             </div>
 
-            {/* Mobile Register/Login Links */}
+            {/* Mobile User Links */}
             <div className="pt-4 pb-3 border-t border-gray-700">
               <div className="px-2 space-y-1">
-                <Link
-                  to="/register"
-                  className="block text-white bg-secondary-DEFAULT px-3 py-2 rounded-md text-base font-medium hover:bg-secondary-dark"
-                  onClick={toggleMobileMenu} // Optionally close menu on link click
-                >
-                  Register
-                </Link>
-                <Link
-                  to="/login"
-                  className="block text-white border border-white px-3 py-2 rounded-md text-base font-medium hover:bg-secondary-light"
-                  onClick={toggleMobileMenu} // Optionally close menu on link click
-                >
-                  Login
-                </Link>
+                {user ? (
+                  <>
+                    <Link
+                      to="/user/dashboard"
+                      className="block text-white bg-secondary-DEFAULT px-3 py-2 rounded-md text-base font-medium hover:bg-secondary-dark"
+                      onClick={toggleMobileMenu}
+                    >
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => {
+                        toggleMobileMenu();
+                        handleLogout();
+                      }}
+                      className="block text-white border border-white px-3 py-2 rounded-md text-base font-medium hover:bg-secondary-light"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/register"
+                      className="block text-white bg-secondary-DEFAULT px-3 py-2 rounded-md text-base font-medium hover:bg-secondary-dark"
+                      onClick={toggleMobileMenu}
+                    >
+                      Register
+                    </Link>
+                    <Link
+                      to="/login"
+                      className="block text-white border border-white px-3 py-2 rounded-md text-base font-medium hover:bg-secondary-light"
+                      onClick={toggleMobileMenu}
+                    >
+                      Login
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
         )}
-      </nav>{" "}
+      </nav>
       <div style={{ height: navbarHeight }} className="bg-black"></div>
     </>
   );
